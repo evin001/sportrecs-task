@@ -1,0 +1,13 @@
+{
+  "store": {
+    "user": "root",
+    "password": "gl3KMPTnjiZe%@kex71g",
+    "dbname": "sportrecs"
+  },
+  "server": {
+    "port": 4000
+  },
+  "user": "root",
+  "password": "gl3KMPTnjiZe%@kex71g",
+  "dbname": "sportrecs"
+}
