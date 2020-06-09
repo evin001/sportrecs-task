@@ -110,7 +110,14 @@ const UserList = () => {
       <Dialog open={modal.status} onClose={closeModal}>
         <div>
           {modal.action === 'delete' && (
-            <DeleteForm onClose={closeModal} id={modal.id} />
+            <DeleteForm
+              onClose={closeModal}
+              id={modal.id}
+              query={{
+                query: GET_USERS,
+                variables: initialVariables,
+              }}
+            />
           )}
           {modal.action === 'edit' && (
             <EditForm onClose={closeModal} id={modal.id} />

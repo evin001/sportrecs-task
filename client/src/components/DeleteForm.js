@@ -19,9 +19,16 @@ const DELETE_USER = gql`
   }
 `
 
-const DeleteForm = ({ id, onClose }) => {
+const DeleteForm = ({ id, query, onClose }) => {
   const [deleteUser, { error }] = useMutation(DELETE_USER, {
-    onCompleted: () => handleClose(),
+    update: (cache, { data: { deleteUser } }) => {
+      const { users } = cache.readQuery(query)
+      cache.writeQuery({
+        ...query,
+        data: { users: users.filter((user) => user.id !== deleteUser.id) },
+      })
+      handleClose()
+    },
   })
 
   const handleClose = () => {
@@ -58,6 +65,10 @@ const DeleteForm = ({ id, onClose }) => {
 DeleteForm.propTypes = {
   id: PropTypes.string,
   onClose: PropTypes.func,
+  query: PropTypes.shape({
+    query: PropTypes.any,
+    variables: PropTypes.object,
+  }),
 }
 
 export default DeleteForm
