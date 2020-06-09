@@ -5,9 +5,9 @@ import { useMutation } from '@apollo/react-hooks'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import TextField from '@material-ui/core/TextField'
 import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogActions from '@material-ui/core/DialogActions'
 import Button from '@material-ui/core/Button'
+import Mistakes from './Mistakes'
 
 const CREATE_USER = gql`
   mutation CreateUser($input: CreateUserInput!) {
@@ -19,9 +19,18 @@ const CREATE_USER = gql`
   }
 `
 
-const CreateForm = ({ onClose }) => {
+const CreateForm = ({ onClose, query }) => {
   const [form, setForm] = useState({ name: '', email: '' })
-  const [createUser, { error }] = useMutation(CREATE_USER)
+  const [createUser, { error }] = useMutation(CREATE_USER, {
+    update: (cache, { data: { createUser } }) => {
+      const { users } = cache.readQuery(query)
+      cache.writeQuery({
+        ...query,
+        data: { users: users.concat([createUser]) },
+      })
+      handleClose()
+    },
+  })
 
   const handleClose = () => {
     if (onClose) onClose()
@@ -41,9 +50,7 @@ const CreateForm = ({ onClose }) => {
     <Fragment>
       <DialogTitle>Создание пользователя</DialogTitle>
       <DialogContent>
-        {error && (
-          <DialogContentText>Не удалось создать пользователя</DialogContentText>
-        )}
+        <Mistakes error={error} />
         <TextField
           required
           value={form.name}
@@ -80,6 +87,10 @@ const CreateForm = ({ onClose }) => {
 
 CreateForm.propTypes = {
   onClose: PropTypes.func,
+  query: PropTypes.shape({
+    query: PropTypes.any,
+    variables: PropTypes.object,
+  }),
 }
 
 export default CreateForm

@@ -18,7 +18,7 @@ import EditForm from './EditForm'
 import DeleteForm from './DeleteForm'
 import AddIcon from '@material-ui/icons/Add'
 
-export const GET_USERS = gql`
+const GET_USERS = gql`
   query Users($skip: Int, $limit: Int) {
     users(skip: $skip, limit: $limit) {
       id
@@ -42,10 +42,12 @@ const useStyles = makeStyles((theme) =>
   })
 )
 
+const initialVariables = { skip: 0, limit: 10 }
+
 const UserList = () => {
   const [modal, setModal] = useState({ status: false, action: '', id: '' })
   const { loading, error, data, fetchMore } = useQuery(GET_USERS, {
-    variables: { skip: 0, limit: 10 },
+    variables: initialVariables,
     fetchPolicy: 'cache-and-network',
   })
   const classes = useStyles()
@@ -107,11 +109,21 @@ const UserList = () => {
       </div>
       <Dialog open={modal.status} onClose={closeModal}>
         <div>
-          {modal.action === 'delete' && <DeleteForm nClose={closeModal} />}
+          {modal.action === 'delete' && (
+            <DeleteForm onClose={closeModal} id={modal.id} />
+          )}
           {modal.action === 'edit' && (
             <EditForm onClose={closeModal} id={modal.id} />
           )}
-          {modal.action === 'create' && <CreateForm onClose={closeModal} />}
+          {modal.action === 'create' && (
+            <CreateForm
+              onClose={closeModal}
+              query={{
+                query: GET_USERS,
+                variables: initialVariables,
+              }}
+            />
+          )}
         </div>
       </Dialog>
     </Fragment>

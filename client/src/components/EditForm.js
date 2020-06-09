@@ -3,12 +3,11 @@ import PropTypes from 'prop-types'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import TextField from '@material-ui/core/TextField'
 import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogActions from '@material-ui/core/DialogActions'
+import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-import { GET_USERS } from './UserList'
+import Mistakes from './Mistakes'
 
 const GET_USER = gql`
   query User($id: ID!) {
@@ -39,14 +38,6 @@ const EditForm = ({ id, onClose }) => {
     onCompleted: () => {
       handleClose()
     },
-    _update: (cache, { data: { updateUser } }) => {
-      console.log({ cache, data, updateUser })
-      const { users } = cache.readQuery({ query: GET_USERS })
-      cache.writeQuery({
-        query: GET_USERS,
-        data: { users },
-      })
-    },
   })
 
   useEffect(() => {
@@ -73,11 +64,7 @@ const EditForm = ({ id, onClose }) => {
     <Fragment>
       <DialogTitle>Редактирование пользователя</DialogTitle>
       <DialogContent>
-        {error && (
-          <DialogContentText>
-            Не удалось обновить пользователя
-          </DialogContentText>
-        )}
+        <Mistakes error={error} />
         <TextField
           required
           value={form.name}
