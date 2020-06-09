@@ -2,11 +2,13 @@ import React, { Fragment, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
+import validator from 'validator'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+
 import Mistakes from './Mistakes'
 
 const GET_USER = gql`
@@ -90,7 +92,7 @@ const EditForm = ({ id, onClose }) => {
         <Button
           onClick={handleConfirmForm}
           color="primary"
-          disabled={!(form.name && form.email)}
+          disabled={!(form.name && validator.isEmail(form.email))}
         >
           Обновить
         </Button>

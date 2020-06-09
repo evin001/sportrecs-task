@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react'
 import PropTypes from 'prop-types'
 import { gql } from 'apollo-boost'
 import { useMutation } from '@apollo/react-hooks'
+import validator from 'validator'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import TextField from '@material-ui/core/TextField'
 import DialogContent from '@material-ui/core/DialogContent'
@@ -76,7 +77,7 @@ const CreateForm = ({ onClose, query }) => {
         <Button
           onClick={handleConfirmForm}
           color="primary"
-          disabled={!(form.name && form.email)}
+          disabled={!(form.name && validator.isEmail(form.email))}
         >
           Создать
         </Button>
