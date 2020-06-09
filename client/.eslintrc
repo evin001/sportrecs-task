@@ -1,0 +1,20 @@
+{
+  "root": true,
+  "extends": ["prettier/react", "plugin:react/recommended", "google"],
+  "plugins": ["prettier", "react-hooks", "import"],
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "semi": false
+      }
+    ],
+    "object-curly-spacing": ["error", "always"],
+    "semi": ["error", "never"],
+    "no-unused-vars": "warn",
+    "indent": ["error", 2]
+  },
+  "ignorePatterns": ["webpack.config.js"],
+  "parser": "babel-eslint"
+}
