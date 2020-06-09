@@ -18,7 +18,9 @@ const resolvers = {
       return await User.create(input)
     },
     updateUser: async (_, { id, input }) => {
-      const user = await User.findOneAndUpdate({ _id: id }, input).exec()
+      const user = await User
+        .findOneAndUpdate({ _id: id }, input, { new: true })
+        .exec()
       if (user) return user
       throw new UserNotFound(id)
     },
